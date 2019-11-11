@@ -1,5 +1,10 @@
 from netmiko import ConnectHandler
 import re
+import sys
+
+#pop what is in args
+for arg in sys.argv:
+	provided_ip=arg
 
 #IP address regex
 regex_ip = '''^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.( 
@@ -17,46 +22,48 @@ username="admin"
 password="admin"
 device_ty="cisco_ios"
 
+# Define IP and mac list     
+ip_and_mac_list=[]
+
 #Bring IP address from IP file 
 with open('ip.txt','r') as ip:
    chaine=ip.read()
-   liste=chaine.split("\n")
-   print(liste)
+   list=chaine.split("\n")
+      
 # Loop for all devices
 
-for ip in liste:
+for device in list:
     # Open CLI connection to device
-    with ConnectHandler(ip,
+    with ConnectHandler(device,
                         device_type=device_ty,
                         port = ssh_port,
                         username = username,
                         password = password) as ch:
-                                          
-    # Create a CLI command template
-        #show_interface_config_temp = "show running-config interface {}"
-
-    # Create desired CLI command and send to device
-        #command = show_interface_config_temp.format("gi3")
-        #interface = ch.send_command(command)
+    # show ip arp                                    
         arp_table=ch.send_command("show ip arp")
-        arp_liste=arp_table.split(" ")
-        print(arp_liste)
-        ip_and_mac_liste=[]
-	#search IPs and MAC and put them in a dictionnary 
-        for result in arp_liste:
-            #search for IP
+    # Create arp table list    
+        arp_list=arp_table.split(" ")
+   	#search IPs and MAC and put them in a dictionnary 
+        for result in arp_list:
+	#search for IP
             ip=re.compile(regex_ip).search(result)
-            #search for mac
+    #search for mac
             mac=re.compile(regex_mac).search(result)
-			#search for cisco mac
+	#search for cisco mac
             mac_cisco=re.compile(regex_cisco_mac).search(result)
+	#Create ip and mac list
             if ip:
-                ip_and_mac_liste.append(result[ip.start():ip.end()])
+                ip_and_mac_list.append(result)
             if mac:
-                ip_and_mac_liste.append(result[mac.start():mac.end()])
+                ip_and_mac_list.append(result)
             if mac_cisco:
-                ip_and_mac_liste.append(result[mac_cisco.start():mac_cisco.end()])
-			
-    # Print the raw command output to the screen
-print (ip_and_mac_liste)
+                ip_and_mac_list.append(result)
+
 				
+# work and IP and MAC list to find the mac address of IP address
+position=0
+for ip_in_list in ip_and_mac_list:
+	position=position+1
+	if ip_in_list==provided_ip:
+		print("mac address table for IP ", "is : ",ip_and_mac_list[position])
+		break
