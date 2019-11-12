@@ -2,11 +2,7 @@ from netmiko import ConnectHandler
 import re
 import sys
 
-def get_mac_from_ip(ip):
-	#pop what is in args
-	#for arg in sys.argv:
-	#	provided_ip=arg
-
+def get_mac_from_ip(wantedip):
 	#IP address regex
 	regex_ip = '''^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.( 
 				25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.( 
@@ -65,6 +61,12 @@ def get_mac_from_ip(ip):
 	position=0
 	for ip_in_list in ip_and_mac_list:
 		position=position+1
-		if ip_in_list==provided_ip:
-			print("mac address table for IP ", "is : ",ip_and_mac_list[position])
+		if ip_in_list==wantedip:
+			#print("mac address table for IP ", "is : ",ip_and_mac_list[position])
 			return ip_and_mac_list[position]
+
+if __name__ == "__main__":
+	#pop what is in args
+	for arg in sys.argv:
+		provided_ip=arg
+	print("mac address table for IP ",provided_ip," is : ",get_mac_from_ip(provided_ip))
