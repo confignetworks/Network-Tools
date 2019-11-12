@@ -74,6 +74,7 @@ def get_mac_from_ip(wantedip):
 	position=0
 	for ip_in_list in ip_and_mac_list:
 		position=position+1
+		# Find hostname
 		ip=re.compile(regex_ip).search(ip_in_list)
 		mac=re.compile(regex_cisco_mac).search(ip_in_list)
 		if not ip and not mac:
