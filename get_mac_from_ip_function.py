@@ -89,6 +89,7 @@ def get_mac_from_ip(wantedip):
 	
 	# work and IP and MAC list to find the mac address of IP address
 	position=0
+	final_result=[]
 	for ip_in_list in ip_and_mac_list:
 		position=position+1
 		# Find hostname
@@ -98,11 +99,14 @@ def get_mac_from_ip(wantedip):
 		if not ip and not mac and not int:
 			hostname=ip_in_list
 		# if IP in the list
-		if ip_in_list==wantedip:
-			#print("mac address table for IP ", "is : ",ip_and_mac_list[position])
-			return hostname+"-"+ip_and_mac_list[position]+"-"+ip_and_mac_list[position+1]
+		for ips in wantedip:
+			#if ip_in_list==wantedip:
+			if ip_in_list==ips:
+				final_result.append("mac address for IP "+ips+" is on :"+hostname+"-"+ip_and_mac_list[position]+"-"+ip_and_mac_list[position+1])
+	return final_result
+	 
 	# Script did not find the wanted IP"
-	return "0"
+	
 if __name__ == "__main__":
 	#pop what is in args
 	for arg in sys.argv:
