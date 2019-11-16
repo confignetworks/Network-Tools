@@ -12,7 +12,7 @@ for arg in sys.argv:
 	if ip:
 		result=get_mac_from_ip(provided_ip)
 		if result!="0":
-			print("mac address table for IP ",provided_ip," is : ",get_mac_from_ip(provided_ip))
+			print("mac address table for IP ",provided_ip," is : ",result)
 		else:
 			print("IP ",provided_ip," does not exist on the network")
 
