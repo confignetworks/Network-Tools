@@ -44,6 +44,7 @@ def get_mac_from_ip(wantedip):
 							password = password) as ch:
 			
 		# Get device hostname
+			ch.send_command("terminal length 0")
 			device_hostname=ch.send_command("sh run | s hostname")
 		# show ip arp
 			arp_table=ch.send_command("show ip arp")
@@ -51,10 +52,6 @@ def get_mac_from_ip(wantedip):
 		hostname=device_hostname.split(" ")
 		hostname.remove("hostname")
 		ip_and_mac_list.append(hostname[0])
-				
-                                    
-			
-		
 		
 		# Remove \n to keep interface
 		arp_table=arp_table.replace('\n',' ')
@@ -62,7 +59,7 @@ def get_mac_from_ip(wantedip):
 		# Create arp table list    
 		arp_list=arp_table.split(" ")
 	
-		#search IPs and MAC and put them in a dictionnary 
+		#search IPs and MAC and put them in a list
 		
 		for result in arp_list:
 			
@@ -102,7 +99,7 @@ def get_mac_from_ip(wantedip):
 		for ips in wantedip:
 			#if ip_in_list==wantedip:
 			if ip_in_list==ips:
-				final_result.append("mac address for IP "+ips+" is on :"+hostname+"-"+ip_and_mac_list[position]+"-"+ip_and_mac_list[position+1])
+				final_result.append("mac address for IP "+ips+" is on :"+hostname+" --> "+ip_and_mac_list[position]+" --> "+ip_and_mac_list[position+1])
 	return final_result
 	 
 	# Script did not find the wanted IP"
